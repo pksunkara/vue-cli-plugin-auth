@@ -12,10 +12,10 @@ module.exports = [
   },
   {
     when: answers => answers.type === 'auth0',
-    name: 'domain',
+    name: 'subdomain',
     type: 'input',
-    message: 'Domain for auth0?',
-    validate: input => (input !== '' ? true : 'Domain is required.'),
+    message: 'Subdomain of auth0?',
+    validate: input => (input !== '' ? true : 'Subdomain is required.'),
   },
   {
     when: answers => answers.type === 'auth0',
