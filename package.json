@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/pksunkara/vue-cli-plugin-auth#readme",
   "dependencies": {
-    "recast": "^0.17.3"
+    "recast": "^0.18.1"
   },
   "devDependencies": {
     "eslint": "^5.4.0",
