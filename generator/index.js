@@ -1,11 +1,13 @@
 const prettier = require('prettier');
 
 module.exports = (api, options, rootOptions) => {
+  // TODO: Typescript support
+  // TODO: Support @vue/cli-plugin-router
   // TODO: Post process lint
 
   if (!api.hasPlugin('route')) {
     // eslint-disable-next-line no-console
-    console.warn('\nERROR: Unable to find router.\n\nPlease install vue-cli-plugin-route before this plugin.');
+    console.warn('\nERROR: Unable to find router.\n\nPlease install `vue-cli-plugin-route` before this plugin.');
     return;
   }
 

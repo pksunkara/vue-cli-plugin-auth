@@ -12,6 +12,9 @@ module.exports = (api, options, rootOptions) => {
   api.injectImports('src/router/index.js', 'import AuthCallback from \'../components/AuthCallback.vue\'');
   api.injectImports('src/router/index.js', 'import AuthForbidden from \'../components/AuthForbidden.vue\'');
 
+  // TODO: Until router plugin is separated
+  rootOptions.router = false;
+
   api.render('./template/auth0');
 
   api.postProcessFiles((files) => {
@@ -37,13 +40,13 @@ module.exports = (api, options, rootOptions) => {
     })`;
 
     const historyLit = '\'history\'';
-    const historyProp = `({\n  mode: ${historyLit}\n})`;
+    const historyProps = `({\n  mode: ${historyLit},\n base: process.env.BASE_URL\n})`;
 
     const callbackExpObj = recast.parse(callbackExp).program.body[0].expression;
     const forbiddenExpObj = recast.parse(forbiddenExp).program.body[0].expression;
     const guardObj = recast.parse(guard).program.body[0];
     const historyLitObj = recast.parse(historyLit).program.body[0].expression;
-    const historyPropObj = recast.parse(historyProp).program.body[0].expression.properties[0];
+    const historyPropsObj = recast.parse(historyProps).program.body[0].expression.properties;
 
     let insertedRoutes = false;
     let guardPresent = false;
@@ -79,12 +82,19 @@ module.exports = (api, options, rootOptions) => {
           const opts = node.init.arguments[0];
 
           if (opts && opts.type === 'ObjectExpression') {
-            const index = opts.properties.findIndex(p => p.key.name === 'mode');
+            const modeIndex = opts.properties.findIndex(p => p.key.name === 'mode');
+            const baseIndex = opts.properties.findIndex(p => p.key.name === 'base');
 
-            if (index === -1) {
-              opts.properties.unshift(historyPropObj);
-            } else {
-              opts.properties[index].value = historyLitObj;
+            if (modeIndex !== -1) {
+              opts.properties[modeIndex].value = historyLitObj;
+            }
+
+            if (baseIndex === -1) {
+              opts.properties.unshift(historyPropsObj[1]);
+            }
+
+            if (modeIndex === -1) {
+              opts.properties.unshift(historyPropsObj[0]);
             }
           }
         }
