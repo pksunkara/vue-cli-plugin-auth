@@ -82,8 +82,8 @@ module.exports = (api, options, rootOptions) => {
           const opts = node.init.arguments[0];
 
           if (opts && opts.type === 'ObjectExpression') {
-            const modeIndex = opts.properties.findIndex(p => p.key.name === 'mode');
-            const baseIndex = opts.properties.findIndex(p => p.key.name === 'base');
+            const modeIndex = opts.properties.findIndex((p) => p.key.name === 'mode');
+            const baseIndex = opts.properties.findIndex((p) => p.key.name === 'base');
 
             if (modeIndex !== -1) {
               opts.properties[modeIndex].value = historyLitObj;
